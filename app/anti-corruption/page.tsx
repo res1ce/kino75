@@ -2,84 +2,91 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import useSWR from 'swr';
 import {
   DownloadIcon,
   EmptyState,
   FilterButton,
+  LoadingState,
   PageHero,
   SearchIcon,
   ShieldIcon,
   easeOut,
-  reveal,
-  stagger,
 } from '../_components/BrandPrimitives';
 
-const documentsData = [
-  {
-    id: '1',
-    title: 'Федеральный закон № 273-ФЗ "О противодействии коррупции"',
-    description: 'Основной федеральный закон, регулирующий вопросы противодействия коррупции в РФ',
-    fileName: '273-FZ.pdf',
-    fileSize: 245000,
-    category: 'Федеральные законы',
-    publishedAt: '2023-12-25',
-  },
-  {
-    id: '2',
-    title: 'Федеральный закон № 79-ФЗ "О государственной гражданской службе"',
-    description: 'Закон о государственной гражданской службе Российской Федерации',
-    fileName: '79-FZ.pdf',
-    fileSize: 312000,
-    category: 'Федеральные законы',
-    publishedAt: '2023-11-15',
-  },
-  {
-    id: '3',
-    title: 'Указ Президента РФ № 378 "О национальной стратегии противодействия коррупции"',
-    description: 'Национальная стратегия противодействия коррупции на период до 2030 года',
-    fileName: 'ukaz-378.pdf',
-    fileSize: 189000,
-    category: 'Указы Президента',
-    publishedAt: '2023-10-20',
-  },
-  {
-    id: '4',
-    title: 'Постановление Правительства РФ о комиссиях по соблюдению требований',
-    description: 'Положение о комиссиях по соблюдению требований к служебному поведению',
-    fileName: 'postanovlenie.pdf',
-    fileSize: 156000,
-    category: 'Постановления',
-    publishedAt: '2023-09-10',
-  },
-  {
-    id: '5',
-    title: 'Методические рекомендации по противодействию коррупции',
-    description: 'Рекомендации для организаций кинематографии',
-    fileName: 'metodichka.pdf',
-    fileSize: 423000,
-    category: 'Методические материалы',
-    publishedAt: '2023-08-05',
-  },
-];
+interface AntiCorruptionDocument {
+  id: string;
+  title: string;
+  description?: string | null;
+  fileUrl: string;
+  fileName: string;
+  fileSize?: number | null;
+  category?: string | null;
+  publishedAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
-const categories = ['Все', 'Федеральные законы', 'Указы Президента', 'Постановления', 'Методические материалы'];
+interface AntiCorruptionResponse {
+  data: AntiCorruptionDocument[];
+}
 
-function formatFileSize(bytes: number): string {
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+function formatFileSize(bytes?: number | null): string {
+  if (!bytes) return '';
   if (bytes < 1024) return `${bytes} Б`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} КБ`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} МБ`;
+}
+
+function formatDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+
+  return date.toLocaleDateString('ru-RU', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+function getDownloadUrl(fileUrl: string) {
+  try {
+    const url = new URL(fileUrl);
+    if (url.pathname.startsWith('/uploads/')) {
+      return url.pathname;
+    }
+  } catch {
+    return fileUrl;
+  }
+
+  return fileUrl;
 }
 
 export default function AntiCorruptionPage() {
   const [selectedCategory, setSelectedCategory] = useState('Все');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredDocuments = documentsData.filter((doc) => {
+  const { data, isLoading } = useSWR<AntiCorruptionResponse>('/api/anti-corruption?limit=100', fetcher);
+  const documents = data?.data || [];
+  const categories = ['Все', ...new Set(documents.map((doc) => doc.category).filter(Boolean) as string[])];
+
+  const filteredDocuments = documents.filter((doc) => {
     const matchesCategory = selectedCategory === 'Все' || doc.category === selectedCategory;
-    const query = searchQuery.toLowerCase();
-    const matchesSearch = doc.title.toLowerCase().includes(query) || doc.description?.toLowerCase().includes(query);
+    const query = searchQuery.trim().toLowerCase();
+    const matchesSearch =
+      !query ||
+      doc.title.toLowerCase().includes(query) ||
+      (doc.description || '').toLowerCase().includes(query) ||
+      (doc.category || '').toLowerCase().includes(query);
+
     return matchesCategory && matchesSearch;
   });
+
+  if (isLoading) {
+    return <LoadingState label="Загрузка документов..." />;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -117,11 +124,11 @@ export default function AntiCorruptionPage() {
         <div className="container mx-auto max-w-7xl">
           <motion.div
             className="mb-8"
-            initial="initial"
-            animate="animate"
-            variants={stagger}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.56, ease: easeOut }}
           >
-            <motion.div variants={reveal} transition={{ duration: 0.6, ease: easeOut }} className="relative mb-4">
+            <div className="relative mb-4">
               <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <input
                 type="text"
@@ -130,60 +137,52 @@ export default function AntiCorruptionPage() {
                 onChange={(event) => setSearchQuery(event.target.value)}
                 className="soft-input pl-12 pr-4 py-3"
               />
-            </motion.div>
-            <motion.div variants={reveal} transition={{ duration: 0.6, ease: easeOut }} className="flex flex-wrap gap-2">
+            </div>
+            <div className="flex flex-wrap gap-2">
               {categories.map((category) => (
                 <FilterButton key={category} active={selectedCategory === category} onClick={() => setSelectedCategory(category)}>
                   {category}
                 </FilterButton>
               ))}
-            </motion.div>
+            </div>
           </motion.div>
 
           {filteredDocuments.length > 0 ? (
-            <motion.div
-              className="space-y-4"
-              initial="initial"
-              animate="animate"
-              variants={stagger}
-            >
-              {filteredDocuments.map((doc) => (
+            <div className="space-y-4">
+              {filteredDocuments.map((doc, index) => (
                 <motion.article
-                  key={doc.id}
-                  variants={reveal}
-                  transition={{ duration: 0.58, ease: easeOut }}
+                  key={`${selectedCategory}-${searchQuery}-${doc.id}`}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.42, delay: Math.min(index * 0.035, 0.18), ease: easeOut }}
                   className="cinema-card p-5 md:p-6"
                 >
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-2 mb-3">
-                        <span className="px-3 py-1 rounded-lg bg-primary/10 text-primary text-xs font-black">
-                          {doc.category}
-                        </span>
-                        <time className="text-xs text-muted-foreground">
-                          {new Date(doc.publishedAt).toLocaleDateString('ru-RU', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })}
-                        </time>
+                        {doc.category && (
+                          <span className="px-3 py-1 rounded-lg bg-primary/10 text-primary text-xs font-black">
+                            {doc.category}
+                          </span>
+                        )}
+                        <time className="text-xs text-muted-foreground">{formatDate(doc.publishedAt)}</time>
                       </div>
                       <h3 className="text-lg md:text-xl font-black text-foreground">{doc.title}</h3>
                       {doc.description && <p className="mt-2 text-sm text-muted-foreground">{doc.description}</p>}
                     </div>
                     <a
-                      href={`/uploads/anti-corruption/${doc.fileName}`}
-                      download
+                      href={getDownloadUrl(doc.fileUrl)}
+                      download={doc.fileName}
                       className="btn-primary px-6 py-3 whitespace-nowrap"
                     >
                       <DownloadIcon />
                       Скачать
-                      <span className="text-xs opacity-75">{formatFileSize(doc.fileSize)}</span>
+                      {doc.fileSize ? <span className="text-xs opacity-75">{formatFileSize(doc.fileSize)}</span> : null}
                     </a>
                   </div>
                 </motion.article>
               ))}
-            </motion.div>
+            </div>
           ) : (
             <EmptyState label="Документы не найдены" />
           )}
@@ -204,8 +203,12 @@ export default function AntiCorruptionPage() {
               Если вам стало известно о факте коррупции, вы можете сообщить об этом по указанным контактам.
             </p>
             <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 font-black">
-              <a href="mailto:anticorruption@kino75.ru" className="hover:underline">anticorruption@kino75.ru</a>
-              <a href="tel:+73022000000" className="hover:underline">+7 (3022) 00-00-00</a>
+              <a href="tel:+74959875656" className="hover:underline">
+                Телефон «горячей линии» прокуратуры России: +7 (495) 987-56-56
+              </a>
+              <a href="tel:88001001260" className="hover:underline">
+                Телефон доверия Следственного управления Следственного комитета России: 8-800-100-12-60
+              </a>
             </div>
           </motion.div>
         </div>

@@ -9,8 +9,6 @@ import {
   LoadingState,
   PageHero,
   easeOut,
-  reveal,
-  stagger,
 } from '../_components/BrandPrimitives';
 
 interface Cinema {
@@ -218,32 +216,6 @@ export default function CinemasPage() {
             </motion.aside>
           </div>
         </div>
-      </section>
-
-      <section className="py-14 px-4 bg-[#f0f0ed]">
-        <motion.div
-          className="container mx-auto max-w-6xl"
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={stagger}
-        >
-          <motion.div variants={reveal} transition={{ duration: 0.65, ease: easeOut }} className="section-kicker mb-5">
-            Для зрителей
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              { title: 'Билеты онлайн', description: 'Переходите на сайт выбранной площадки и покупайте билеты без лишних шагов.' },
-              { title: 'Комфортные залы', description: 'Площадки региона подходят для премьер, семейных показов и специальных событий.' },
-              { title: 'Доступная среда', description: 'Уточняйте условия посещения и поддержку маломобильных зрителей у кинотеатра.' },
-            ].map((item) => (
-              <motion.article key={item.title} variants={reveal} transition={{ duration: 0.65, ease: easeOut }} className="cinema-card p-6">
-                <h3 className="text-lg font-black text-foreground">{item.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
-              </motion.article>
-            ))}
-          </div>
-        </motion.div>
       </section>
     </div>
   );

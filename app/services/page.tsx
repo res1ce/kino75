@@ -11,8 +11,6 @@ import {
   PageHero,
   ServiceIcon,
   easeOut,
-  reveal,
-  stagger,
 } from '../_components/BrandPrimitives';
 
 interface Service {
@@ -38,7 +36,7 @@ export default function ServicesPage() {
 
   const { data: services, isLoading } = useSWR<Service[]>('/api/services?active=true', fetcher);
   const categories = services ? ['Все', ...new Set(services.map((service) => service.category).filter(Boolean) as string[])] : ['Все'];
-  const filteredServices = services?.filter((service) => selectedCategory === 'Все' || service.category === selectedCategory);
+  const filteredServices = services?.filter((service) => selectedCategory === 'Все' || service.category === selectedCategory) || [];
 
   if (isLoading) {
     return <LoadingState label="Загрузка услуг..." />;
@@ -67,18 +65,17 @@ export default function ServicesPage() {
 
       <section className="py-12 md:py-16 px-4">
         <div className="container mx-auto max-w-7xl">
-          {filteredServices && filteredServices.length > 0 ? (
-            <motion.div
+          {filteredServices.length > 0 ? (
+            <div
+              key={selectedCategory}
               className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
-              initial="initial"
-              animate="animate"
-              variants={stagger}
             >
-              {filteredServices.map((service) => (
+              {filteredServices.map((service, index) => (
                 <motion.article
                   key={service.id}
-                  variants={reveal}
-                  transition={{ duration: 0.58, ease: easeOut }}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.42, delay: Math.min(index * 0.035, 0.18), ease: easeOut }}
                   whileHover={{ y: -6 }}
                   className="cinema-card group relative overflow-hidden p-6 cursor-pointer"
                   onClick={() => setSelectedService(service)}
@@ -111,7 +108,7 @@ export default function ServicesPage() {
                   </div>
                 </motion.article>
               ))}
-            </motion.div>
+            </div>
           ) : (
             <EmptyState label="Услуги в данной категории не найдены" />
           )}
@@ -190,30 +187,6 @@ export default function ServicesPage() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <section className="py-12 px-4 bg-[#f0f0ed]">
-        <motion.div
-          className="container mx-auto max-w-5xl"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.65, ease: easeOut }}
-        >
-          <div className="rounded-lg border border-border bg-gradient-to-r from-primary to-accent p-8 md:p-12 text-white shadow-[0_18px_46px_rgba(17,17,17,0.16)]">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-black">Нужна индивидуальная услуга?</h2>
-                <p className="mt-3 max-w-2xl font-medium">
-                  Опишите задачу, и мы подберём формат работы для съёмки, показа или события.
-                </p>
-              </div>
-              <a href="mailto:info@kino75.ru" className="inline-flex items-center justify-center min-h-[46px] rounded-lg border border-white/40 bg-white/90 px-7 py-3 font-black text-primary hover:bg-white">
-                Связаться
-              </a>
-            </div>
-          </div>
-        </motion.div>
-      </section>
     </div>
   );
 }

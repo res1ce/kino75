@@ -15,6 +15,11 @@ const defaultData: Record<string, string> = {
   stats_cinemas_label: 'кинотеатров',
   stats_viewers_value: '50K+',
   stats_viewers_label: 'зрителей',
+  footer_description: 'Искусство кино в сердце Забайкалья',
+  footer_address: 'г. Чита, ул. Ленина, 1',
+  footer_phone: '+7 (3022) 00-00-00',
+  footer_email: 'info@kino75.ru',
+  footer_socials: '[]',
 };
 
 export async function GET() {

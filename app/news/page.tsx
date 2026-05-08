@@ -12,8 +12,6 @@ import {
   NewsIcon,
   PageHero,
   easeOut,
-  reveal,
-  stagger,
 } from '../_components/BrandPrimitives';
 
 interface NewsItem {
@@ -139,17 +137,16 @@ export default function NewsPage() {
       <section className="py-12 md:py-16 px-4">
         <div className="container mx-auto max-w-7xl">
           {filteredNews.length > 0 ? (
-            <motion.div
+            <div
+              key={`${selectedYear ?? 'all'}-${selectedMonth ?? 'all'}`}
               className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
-              initial="initial"
-              animate="animate"
-              variants={stagger}
             >
-              {filteredNews.map((news) => (
+              {filteredNews.map((news, index) => (
                 <motion.article
                   key={news.id}
-                  variants={reveal}
-                  transition={{ duration: 0.58, ease: easeOut }}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.42, delay: Math.min(index * 0.035, 0.18), ease: easeOut }}
                   whileHover={{ y: -6 }}
                   className="cinema-card group overflow-hidden"
                 >
@@ -187,7 +184,7 @@ export default function NewsPage() {
                   </Link>
                 </motion.article>
               ))}
-            </motion.div>
+            </div>
           ) : (
             <EmptyState label="Новости не найдены" />
           )}

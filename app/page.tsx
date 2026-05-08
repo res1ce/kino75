@@ -19,14 +19,6 @@ interface HomePageData {
   hero_subtitle: string;
   about_title: string;
   about_content: string;
-  stats_years_value: string;
-  stats_years_label: string;
-  stats_films_value: string;
-  stats_films_label: string;
-  stats_cinemas_value: string;
-  stats_cinemas_label: string;
-  stats_viewers_value: string;
-  stats_viewers_label: string;
 }
 
 const defaultData: HomePageData = {
@@ -35,14 +27,6 @@ const defaultData: HomePageData = {
   about_title: 'Киноинфраструктура региона',
   about_content:
     'Забайкальская государственная кинокомпания развивает кинопроизводство, прокат и культурные инициативы в крае. Мы объединяем творческие команды, площадки и зрителей вокруг современных проектов.\n\nКомпания помогает запускать съёмки, организует показы, поддерживает региональные события и делает кино ближе к жителям Забайкалья.',
-  stats_years_value: '50+',
-  stats_years_label: 'лет истории',
-  stats_films_value: '200+',
-  stats_films_label: 'кинопроектов',
-  stats_cinemas_value: '15',
-  stats_cinemas_label: 'площадок',
-  stats_viewers_value: '50K+',
-  stats_viewers_label: 'зрителей',
 };
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -99,12 +83,6 @@ export default function HomePage() {
   });
 
   const data = homeData || defaultData;
-  const stats = [
-    { value: data.stats_years_value, label: data.stats_years_label },
-    { value: data.stats_films_value, label: data.stats_films_label },
-    { value: data.stats_cinemas_value, label: data.stats_cinemas_label },
-    { value: data.stats_viewers_value, label: data.stats_viewers_label },
-  ];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -146,29 +124,16 @@ export default function HomePage() {
               transition={{ duration: 0.82, ease: easeOut }}
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
-              <Link href="/services" className="btn-primary px-7 py-3">
-                Начать проект
-                <ArrowIcon className="w-5 h-5" />
-              </Link>
-              <Link href="/cinemas" className="btn-secondary px-7 py-3">
-                Найти кинотеатр
+              <Link href="/cinemas" className="btn-primary px-7 py-3">
+                Наши кинотеатры
                 <CinemaIcon className="w-5 h-5" />
+              </Link>
+              <Link href="/news" className="btn-secondary px-7 py-3">
+                Наши новости
+                <NewsIcon className="w-5 h-5" />
               </Link>
             </motion.div>
           </div>
-
-          <motion.div
-            variants={reveal}
-            transition={{ duration: 0.82, ease: easeOut, delay: 0.2 }}
-            className="mt-14 grid grid-cols-2 md:grid-cols-4 max-w-4xl border border-border bg-white/78 backdrop-blur-md rounded-lg overflow-hidden shadow-[0_18px_46px_rgba(17,17,17,0.08)]"
-          >
-            {stats.map((stat) => (
-              <div key={stat.label} className="p-5 border-r border-b md:border-b-0 border-border last:border-r-0">
-                <div className="text-3xl md:text-4xl font-black text-primary">{stat.value}</div>
-                <div className="mt-1 text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
-          </motion.div>
         </motion.div>
       </section>
 

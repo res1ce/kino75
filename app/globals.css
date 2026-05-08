@@ -430,6 +430,28 @@ select:focus-visible {
   color: var(--teal-500);
 }
 
+.news-detail-content {
+  overflow-wrap: anywhere;
+}
+
+.news-detail-content :where(p, ul, ol, blockquote, h2, h3, h4) {
+  max-width: 980px;
+}
+
+.news-detail-content :where(p) {
+  line-height: 1.85;
+}
+
+.news-detail-content :where(h2, h3, h4) {
+  margin-top: 1.7em;
+}
+
+.news-detail-content :where(img) {
+  max-width: min(100%, 1040px);
+  max-height: 620px;
+  margin: 28px 0;
+}
+
 .admin-news-editor .ProseMirror {
   min-height: 320px;
   outline: none;
