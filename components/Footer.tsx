@@ -35,6 +35,7 @@ interface HomeFooterData {
 
 const navLinks = [
   { href: '/', label: 'Главная' },
+  { href: '/about', label: 'О нас' },
   { href: '/cinemas', label: 'Кинотеатры' },
   { href: '/news', label: 'Новости' },
   { href: '/services', label: 'Услуги' },
@@ -149,12 +150,8 @@ export default function Footer({ footerData }: FooterProps) {
           </motion.div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between gap-4 text-xs text-white/50">
+        <div className="mt-12 pt-6 border-t border-white/10 text-xs text-white/50">
           <p>&copy; {new Date().getFullYear()} Забайкальская государственная кинокомпания. Все права защищены.</p>
-          <div className="flex flex-wrap gap-5">
-            <Link href="#" className="hover:text-white transition-colors">Политика конфиденциальности</Link>
-            <Link href="#" className="hover:text-white transition-colors">Условия использования</Link>
-          </div>
         </div>
       </div>
     </footer>

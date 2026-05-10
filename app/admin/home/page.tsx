@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import useSWR from 'swr';
 
-type SectionId = 'hero' | 'about' | 'footer';
+type SectionId = 'hero' | 'footer';
 type SocialPlatform = 'vk' | 'telegram' | 'youtube' | 'rutube' | 'ok' | 'dzen' | 'site';
 
 interface FooterSocial {
@@ -21,8 +21,6 @@ interface FooterSocial {
 interface HomePageData {
   hero_title: string;
   hero_subtitle: string;
-  about_title: string;
-  about_content: string;
   footer_description: string;
   footer_address: string;
   footer_phone: string;
@@ -44,8 +42,6 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 const fields: EditableField[] = [
   { key: 'hero_title', label: 'Заголовок', section: 'hero' },
   { key: 'hero_subtitle', label: 'Подзаголовок', section: 'hero' },
-  { key: 'about_title', label: 'Заголовок раздела', section: 'about', type: 'text' },
-  { key: 'about_content', label: 'Основной текст', section: 'about', type: 'textarea' },
   { key: 'footer_description', label: 'Описание в подвале', section: 'footer', type: 'textarea' },
   { key: 'footer_address', label: 'Адрес', section: 'footer', type: 'textarea' },
   { key: 'footer_phone', label: 'Телефон', section: 'footer', type: 'text' },
@@ -54,8 +50,7 @@ const fields: EditableField[] = [
 
 const sections: { id: SectionId; title: string; icon: string }[] = [
   { id: 'hero', title: 'Главный экран', icon: '01' },
-  { id: 'about', title: 'О компании', icon: '02' },
-  { id: 'footer', title: 'Подвал', icon: '03' },
+  { id: 'footer', title: 'Подвал', icon: '02' },
 ];
 
 const legacySocialLabels: Record<SocialPlatform, string> = {
@@ -74,7 +69,6 @@ export default function AdminHomePage() {
   const [editingField, setEditingField] = useState<{ key: EditableFieldKey; value: string; label: string; type?: 'text' | 'textarea' } | null>(null);
   const [openSections, setOpenSections] = useState<Record<SectionId, boolean>>({
     hero: true,
-    about: true,
     footer: true,
   });
   const [socialsDraft, setSocialsDraft] = useState<FooterSocial[]>([]);

@@ -167,6 +167,16 @@ export function ServiceIcon({ className = 'w-8 h-8' }: { className?: string }) {
   );
 }
 
+export function PeopleIcon({ className = 'w-8 h-8' }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M16 19v-1.5a4 4 0 00-4-4H8a4 4 0 00-4 4V19" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M10 10a3 3 0 100-6 3 3 0 000 6z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M20 19v-1a3.5 3.5 0 00-2.5-3.35M16 4.35a3 3 0 010 5.8" />
+    </svg>
+  );
+}
+
 export function ShieldIcon({ className = 'w-8 h-8' }: { className?: string }) {
   return (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

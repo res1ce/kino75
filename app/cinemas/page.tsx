@@ -110,13 +110,10 @@ export default function CinemasPage() {
             balloonContentHeader: cinema.name,
             balloonContentBody: `
               <div style="padding: 12px; color: #111111;">
-                <p><strong>Адрес:</strong> ${cinema.address}</p>
-                ${cinema.phone ? `<p><strong>Телефон:</strong> ${cinema.phone}</p>` : ''}
-                ${cinema.description ? `<p>${cinema.description}</p>` : ''}
-                ${cinema.link ? `<a href="${cinema.link}" target="_blank" style="color: #111111; display: inline-block; margin-top: 10px; font-weight: 700;">Перейти на сайт</a>` : ''}
+                ${cinema.link ? `<a href="${cinema.link}" target="_blank" style="background: #111111; color: #ffffff; display: inline-block; margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-weight: 800; text-decoration: none;">Перейти на сайт</a>` : ''}
               </div>
             `,
-            balloonContentFooter: cinema.address,
+            balloonContentFooter: '',
           },
           {
             preset: 'islands#circleIcon',
@@ -149,7 +146,7 @@ export default function CinemasPage() {
       <PageHero
         eyebrow="Карта показов"
         title="Кинотеатры Забайкалья"
-        description="Найдите ближайшую площадку, посмотрите контакты и перейдите на сайт кинотеатра для расписания и билетов."
+        description="Выберите кинотеатр и перейдите на его сайт для расписания и билетов."
         icon={<CinemaIcon />}
       />
 
@@ -191,14 +188,12 @@ export default function CinemasPage() {
                         transition={{ duration: 0.48, delay: index * 0.04 }}
                       >
                         <h3 className="font-black text-foreground">{cinema.name}</h3>
-                        <p className="mt-2 text-sm text-muted-foreground">{cinema.address}</p>
-                        {cinema.phone && <p className="mt-2 text-sm text-muted-foreground">{cinema.phone}</p>}
                         {cinema.link && (
                           <a
                             href={cinema.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-3 inline-flex text-sm font-bold text-primary hover:text-accent"
+                            className="mt-4 inline-flex items-center justify-center rounded-lg bg-[#111111] px-4 py-2.5 text-sm font-black text-white shadow-[0_12px_26px_rgba(17,17,17,0.24)] hover:bg-primary"
                             onClick={(event) => event.stopPropagation()}
                           >
                             Перейти на сайт

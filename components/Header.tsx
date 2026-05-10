@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 
 const navItems = [
   { href: '/', label: 'Главная' },
+  { href: '/about', label: 'О нас' },
   { href: '/cinemas', label: 'Кинотеатры' },
   { href: '/news', label: 'Новости' },
   { href: '/services', label: 'Услуги' },

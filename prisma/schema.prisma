@@ -65,6 +65,22 @@ model Cinema {
   @@map("cinemas")
 }
 
+// Сотрудники компании
+model Employee {
+  id        String   @id @default(cuid())
+  name      String
+  position  String
+  photoUrl  String?
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("employees")
+  @@index([active])
+  @@index([order])
+}
+
 // Противодействие коррупции (файлы)
 model AntiCorruption {
   id          String   @id @default(cuid())

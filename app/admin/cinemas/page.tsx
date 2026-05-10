@@ -159,8 +159,6 @@ export default function AdminCinemasPage() {
                         </span>
                       </div>
                       <h3 className="text-lg font-semibold text-foreground">{cinema.name}</h3>
-                      <p className="text-sm text-muted-foreground">{cinema.address}</p>
-                      {cinema.phone && <p className="text-sm text-muted-foreground mt-1">{cinema.phone}</p>}
                       {cinema.link && (
                         <a href={cinema.link} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline mt-1 inline-block">
                           {cinema.link}

@@ -52,6 +52,20 @@ CREATE TABLE "cinemas" (
     CONSTRAINT "cinemas_pkey" PRIMARY KEY ("id")
 );
 
+-- Таблица сотрудников
+CREATE TABLE "employees" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "position" TEXT NOT NULL,
+    "photoUrl" TEXT,
+    "order" INTEGER NOT NULL DEFAULT 0,
+    "active" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "employees_pkey" PRIMARY KEY ("id")
+);
+
 -- Таблица противодействия коррупции (файлы)
 CREATE TABLE "anti_corruption" (
     "id" TEXT NOT NULL,
@@ -125,6 +139,8 @@ CREATE UNIQUE INDEX "news_slug_key" ON "news"("slug");
 CREATE INDEX "news_publishedAt_idx" ON "news"("publishedAt");
 CREATE INDEX "news_published_idx" ON "news"("published");
 CREATE INDEX "anti_corruption_publishedAt_idx" ON "anti_corruption"("publishedAt");
+CREATE INDEX "employees_active_idx" ON "employees"("active");
+CREATE INDEX "employees_order_idx" ON "employees"("order");
 CREATE UNIQUE INDEX "prosecutor_explanations_slug_key" ON "prosecutor_explanations"("slug");
 CREATE INDEX "prosecutor_explanations_publishedAt_idx" ON "prosecutor_explanations"("publishedAt");
 CREATE UNIQUE INDEX "home_page_key_key" ON "home_page"("key");

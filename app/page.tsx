@@ -4,10 +4,12 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import useSWR from 'swr';
 import {
-  ArrowIcon,
   CinemaIcon,
   NewsIcon,
+  PeopleIcon,
+  ScaleIcon,
   ServiceIcon,
+  ShieldIcon,
   TextLink,
   easeOut,
   reveal,
@@ -17,62 +19,57 @@ import {
 interface HomePageData {
   hero_title: string;
   hero_subtitle: string;
-  about_title: string;
-  about_content: string;
 }
 
 const defaultData: HomePageData = {
   hero_title: 'Забайкальская государственная кинокомпания',
   hero_subtitle: 'Региональное кино, кинопоказы и культурные проекты Забайкалья',
-  about_title: 'Киноинфраструктура региона',
-  about_content:
-    'Забайкальская государственная кинокомпания развивает кинопроизводство, прокат и культурные инициативы в крае. Мы объединяем творческие команды, площадки и зрителей вокруг современных проектов.\n\nКомпания помогает запускать съёмки, организует показы, поддерживает региональные события и делает кино ближе к жителям Забайкалья.',
 };
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const pillars = [
   {
-    icon: <ServiceIcon className="w-7 h-7" />,
+    icon: <PeopleIcon className="w-7 h-7" />,
     number: '01',
-    title: 'Производство',
-    description: 'Сценарная, съёмочная и монтажная работа для документальных, игровых и социальных проектов.',
-    href: '/services',
+    title: 'О нас',
+    description: 'Информация о кинокомпании и сотрудниках.',
+    href: '/about',
   },
   {
     icon: <CinemaIcon className="w-7 h-7" />,
     number: '02',
-    title: 'Киноплощадки',
-    description: 'Карта кинотеатров и партнёрских залов, где жители края смотрят премьеры и спецпоказы.',
+    title: 'Кинотеатры',
+    description: 'Список кинотеатров и ссылки на их сайты.',
     href: '/cinemas',
   },
   {
     icon: <NewsIcon className="w-7 h-7" />,
     number: '03',
     title: 'Новости',
-    description: 'Премьеры, фестивали, отчёты со съёмок и события региональной киноиндустрии.',
+    description: 'Публикации, объявления и события компании.',
     href: '/news',
   },
   {
-    icon: <ArrowIcon className="w-7 h-7" />,
-    number: '04',
-    title: 'События',
-    description: 'Показы, дискуссии, образовательные встречи и культурные программы для разных аудиторий.',
-    href: '/services',
-  },
-  {
     icon: <ServiceIcon className="w-7 h-7" />,
-    number: '05',
-    title: 'Образование',
-    description: 'Практические форматы для начинающих авторов, операторов, монтажёров и организаторов показов.',
+    number: '04',
+    title: 'Услуги',
+    description: 'Перечень услуг, описание и стоимость.',
     href: '/services',
   },
   {
-    icon: <CinemaIcon className="w-7 h-7" />,
+    icon: <ShieldIcon className="w-7 h-7" />,
+    number: '05',
+    title: 'Противодействие коррупции',
+    description: 'Нормативные документы и материалы.',
+    href: '/anti-corruption',
+  },
+  {
+    icon: <ScaleIcon className="w-7 h-7" />,
     number: '06',
-    title: 'Партнёрство',
-    description: 'Совместные проекты с учреждениями культуры, студиями, муниципалитетами и дистрибьюторами.',
-    href: '/services',
+    title: 'Прокурор разъясняет',
+    description: 'Правовые разъяснения для посетителей сайта.',
+    href: '/prosecutor',
   },
 ];
 
@@ -151,7 +148,7 @@ export default function HomePage() {
                 Направления
               </motion.div>
               <motion.h2 variants={reveal} transition={{ duration: 0.7, ease: easeOut }} className="text-3xl md:text-5xl font-black leading-tight">
-                Один центр для съёмок, проката и киножизни края
+                Разделы сайта
               </motion.h2>
             </div>
           </motion.div>
@@ -189,36 +186,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 md:py-28 px-4 bg-[#ffffff]">
-        <div className="container mx-auto max-w-7xl">
-          <div className="max-w-4xl">
-            <motion.div
-              initial="initial"
-              whileInView="animate"
-              viewport={{ once: true, amount: 0.25 }}
-              variants={stagger}
-            >
-              <motion.div variants={reveal} transition={{ duration: 0.65, ease: easeOut }} className="section-kicker mb-5">
-                О компании
-              </motion.div>
-              <motion.h2 variants={reveal} transition={{ duration: 0.7, ease: easeOut }} className="text-3xl md:text-5xl font-black leading-tight">
-                {data.about_title}
-              </motion.h2>
-              <motion.div variants={reveal} transition={{ duration: 0.7, ease: easeOut }} className="mt-7 space-y-5">
-                {data.about_content.split('\n\n').map((paragraph) => (
-                  <p key={paragraph} className="text-muted-foreground leading-relaxed text-base md:text-lg">
-                    {paragraph}
-                  </p>
-                ))}
-              </motion.div>
-              <motion.div variants={reveal} transition={{ duration: 0.7, ease: easeOut }} className="mt-9">
-                <TextLink href="/news">Смотреть новости компании</TextLink>
-              </motion.div>
-            </motion.div>
-
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

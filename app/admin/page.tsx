@@ -9,6 +9,7 @@ import { ArrowIcon, LoadingState, easeOut, reveal, stagger } from '../_component
 
 const menuItems = [
   { href: '/admin/news', label: 'Новости', marker: 'N', description: 'Управление публикациями и архивом' },
+  { href: '/admin/about', label: 'О нас', marker: 'O', description: 'Текст о компании и сотрудники' },
   { href: '/admin/cinemas', label: 'Кинотеатры', marker: 'K', description: 'Площадки, адреса и контакты' },
   { href: '/admin/services', label: 'Услуги', marker: 'S', description: 'Каталог услуг и стоимость' },
   { href: '/admin/anti-corruption', label: 'Противодействие коррупции', marker: 'A', description: 'Файлы и нормативные материалы' },
